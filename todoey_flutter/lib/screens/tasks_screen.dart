@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:todoey_flutter/widgets/tasks_list.dart';
 import 'add_task_screen.dart';
-import 'package:todoey_flutter/models/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/models/task_data.dart';
 
-class TasksScreen extends StatefulWidget {
-
-  @override
-  _TasksScreenState createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
-    List<Task> tasks = [
-    Task(name: 'Buy milk', isDone: false),
-    Task(name: 'Buy eggs', isDone: false),
-    Task(name: 'Buy bread', isDone: false),
-  ];
-
+class TasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,12 +20,7 @@ class _TasksScreenState extends State<TasksScreen> {
             builder: (context) => SingleChildScrollView( // this keeps the bottom sheet above the keyboard
               child: Container(
                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: AddTaskScreen((newTaskTitle){ // creating the callback for the button on the add task screen.
-                  setState(() {
-                    tasks.add(Task(name: newTaskTitle));
-                  });
-                  Navigator.pop(context);
-                }),
+                child: AddTaskScreen(),
               ),
             )
           );
@@ -76,7 +60,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   ),
                 ),
                 Text(
-                  '${tasks.length} Tasks',
+                  '${Provider.of<TaskData>(context).taskCount} Tasks',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -94,7 +78,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     topLeft: Radius.circular(20.0),
                     topRight: Radius.circular(20.0),
                   )),
-              child: TasksList(tasks), // passing the tasks list to the class
+              child: TasksList(), // passing the tasks list to the class
             ),
           ),
         ],

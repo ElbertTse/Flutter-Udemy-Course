@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/models/task_data.dart';
 class AddTaskScreen extends StatelessWidget {
-
-  final Function addTaskCallback;
-
-  AddTaskScreen(this.addTaskCallback);
-
   @override
   Widget build(BuildContext context) {
     String newTask;
@@ -48,9 +44,8 @@ class AddTaskScreen extends StatelessWidget {
               ),
               color: Colors.lightBlueAccent,
               onPressed: () {
-                // add task to list
-                // need to call the callback function here
-                addTaskCallback(newTask);
+                Provider.of<TaskData>(context, listen: false).addTask(newTask); // acting weird, wanted listen to be false to work.
+                Navigator.pop(context);
               },
             ),
           ],

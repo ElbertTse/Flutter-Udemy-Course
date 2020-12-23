@@ -1,39 +1,31 @@
 import 'package:flutter/material.dart';
 import 'tasks_tile.dart';
-import 'package:todoey_flutter/models/task.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/models/task_data.dart';
 
-
-// keep this as a stateful widget, only had to move tasks list up the tree. 
-// only thing we did to ove state up was moving the list to the tasks screen.
-
-class TasksList extends StatefulWidget {
-
-  final List<Task> tasks;
-
-  TasksList(this.tasks);
-
-  @override
-  _TasksListState createState() => _TasksListState();
-}
-
-class _TasksListState extends State<TasksList> {
-
+class TasksList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return TaskTile(
-            taskTitle: widget.tasks[index].name,
-            isChecked: widget.tasks[index].isDone,
-            checkBoxCallback: (bool checkboxState) {
-              setState(() {
-                widget.tasks[index].toggleDone();
-              }
+    return Consumer<TaskData>(
+      // wrapping with this shortens the whole "Provider.of<TaskData>(context).tasks...." to "taskData"
+      builder: (context, taskData, child) {
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            final task = taskData.tasks[index];
+            return TaskTile(
+              taskTitle: task.name,
+              isChecked: task.isDone,
+              checkBoxCallback: (bool checkboxState) {
+                taskData.updateTask(task);
+              },
+              longPressCallback: () {
+                taskData.deleteTask(task);
+              },
             );
           },
+          itemCount: taskData.taskCount,
         );
       },
-      itemCount: widget.tasks.length,
     );
   }
 }
